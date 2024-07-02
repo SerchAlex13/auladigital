@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { AlumnosService } from './alumnos.service';
 import { CrearAlumnoDTO } from './dto/alumno.dto';
 
@@ -18,5 +18,10 @@ export class AlumnosController {
             nuevoAlumno.apellido_paterno,
             nuevoAlumno.apellido_materno
         );
+    }
+
+    @Delete(':id')
+    eliminarAlumno(@Param('id') id: string) {
+        this.alumnosService.eliminarAlumno(id);
     }
 }

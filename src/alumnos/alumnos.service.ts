@@ -36,7 +36,7 @@ export class AlumnosService {
         
     }
 
-    eliminarAlumno() {
-        
+    eliminarAlumno(id: string) {
+        this.alumnos = this.alumnos.filter(alumno => alumno.id !== id);
     }
 }
