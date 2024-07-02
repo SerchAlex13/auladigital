@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Alumno, EstatusAlumno } from './alumno.entity';
 import { v4 } from 'uuid';
+import { ActualizarAlumnoDTO } from './dto/alumno.dto';
 
 @Injectable()
 export class AlumnosService {
@@ -32,8 +33,17 @@ export class AlumnosService {
         return alumno;
     }
 
-    actualizarAlumno() {
-        
+    actualizarAlumno(id: string, camposActualizados: ActualizarAlumnoDTO): Alumno {
+        const alumno = this.buscarAlumnoPorId(id);
+        const alumnoActualizado = Object.assign(alumno, camposActualizados);
+
+        this.alumnos = this.alumnos.map(alumno => alumno.id === id ? alumnoActualizado : alumno);
+
+        return alumnoActualizado;
+    }
+
+    buscarAlumnoPorId(id: string): Alumno {
+        return this.alumnos.find(alumno => alumno.id === id);
     }
 
     eliminarAlumno(id: string) {
