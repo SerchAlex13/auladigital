@@ -1,5 +1,5 @@
 import { EstatusAlumno } from '../alumno.entity';
-import { IsEnum, IsIn, IsNotEmpty, IsOptional, IsString, MinLength } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CrearAlumnoDTO {
     @IsString()
