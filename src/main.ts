@@ -17,7 +17,13 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
-  
+
+  // Para que otros sitios puedan consultar la API y no dé error de CORS
+  app.enableCors({
+    // Para especificar dominios que sí pueden acceder
+    origin: 'https://faztweb.com'
+  });
+
   await app.listen(3000);
 }
 bootstrap();
