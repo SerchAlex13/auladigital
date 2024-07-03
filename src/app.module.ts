@@ -3,9 +3,18 @@ import { AlumnosModule } from './alumnos/alumnos.module';
 import { CarrerasModule } from './carreras/carreras.module';
 import { IndexController } from './index/index.controller';
 import { ActividadesModule } from './actividades/actividades.module';
+import { ServeStaticModule} from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
-  imports: [AlumnosModule, CarrerasModule, ActividadesModule],
+  imports: [
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'client/dist'),
+    }),
+    AlumnosModule,
+    CarrerasModule,
+    ActividadesModule
+  ],
   controllers: [IndexController],
   providers: [],
 })
