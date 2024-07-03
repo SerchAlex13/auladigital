@@ -1,6 +1,7 @@
-import { Controller, Get, HttpCode, Param, ParseBoolPipe, ParseIntPipe, Query, Req, Res } from '@nestjs/common';
+import { Controller, Get, HttpCode, Param, ParseBoolPipe, ParseIntPipe, Query, Req, Res, UseGuards } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { ValidateUserPipe } from './pipes/validate-user/validate-user.pipe';
+import { AuthGuard } from './guards/auth/auth.guard';
 
 @Controller()
 export class IndexController {
@@ -35,11 +36,13 @@ export class IndexController {
     }
 
     @Get('estatus-alumno/:estatus')
+    @UseGuards(AuthGuard)
     esAlumnoActivo(@Param('estatus', ParseBoolPipe) estatus: boolean) {
         return estatus;
     }
 
     @Get('greet')
+    @UseGuards(AuthGuard)
     greet(@Query(ValidateUserPipe) query: {name: string, age: number}) {
         return `Hola ${query.name}, tienes ${query.age + 13} años`;
     }
