@@ -1,12 +1,17 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { AlumnosService } from './alumnos.service';
 import { ActualizarAlumnoDTO, CrearAlumnoDTO } from './dto/alumno.dto';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('alumnos')
+@ApiTags('alumnos')
 export class AlumnosController {
     constructor(private alumnosService: AlumnosService) {}
 
     @Get()
+    @ApiOperation({summary: 'Lista a todos los alumnos'})
+    @ApiResponse({status: 200, description: 'Retorna a todos los alumnos.'})
+    @ApiResponse({status: 403, description: 'Forbidden.'})
     obtenerAlumnos() {
         return this.alumnosService.obtenerAlumnos();
     }
