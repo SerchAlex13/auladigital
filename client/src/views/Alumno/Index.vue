@@ -1,26 +1,26 @@
+<script>
+    import { obtenerAlumnos } from '@/services/api';
+
+    export default {
+        data() {
+            return {
+                alumnos: []
+            };
+        },
+        async created() {
+            const response = await obtenerAlumnos();
+            this.alumnos = response.data;
+        },
+    };
+</script>
+
 <template>
     <div>
-        <h1>Students</h1>
+        <h1>Alumnos</h1>
         <ul>
-            <li v-for="student in students" :key="student.id">
-                {{ student.nombre }}
+            <li v-for="alumno in alumnos" :key="alumno.id">
+                {{ alumno.nombre }} {{ alumno.apellido_paterno }} {{ alumno.apellido_materno }}, {{ alumno.estatus }}
             </li>
         </ul>
     </div>
 </template>
-  
-<script>
-    import { getStudents } from '@/services/api';
-    
-    export default {
-        data() {
-            return {
-                students: []
-            };
-        },
-        async created() {
-            const response = await getStudents();
-            this.students = response.data;
-        },
-    };
-</script>
