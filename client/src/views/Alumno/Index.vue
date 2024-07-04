@@ -2,10 +2,15 @@
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { eliminarAlumno, obtenerAlumnos } from '@/services/api';
+import Modal from '@/components/Modal.vue';
 
 const alumnos = ref([]);
 
 const router = useRouter();
+
+const showModal = ref(false);
+
+const alumnoIdToDelete = ref(null);
 
 const fetchAlumnos = async () => {
     const response = await obtenerAlumnos();
@@ -19,6 +24,18 @@ const editarAlumnoHandler = (id) => {
 const eliminarAlumnoHandler = async (id) => {
     await eliminarAlumno(id);
     alumnos.value = alumnos.value.filter(alumno => alumno.id !== id);
+};
+
+const confirmDelete = (id) => {
+    alumnoIdToDelete.value = id;
+    showModal.value = true;
+};
+
+const handleConfirmDelete = async () => {
+    if (alumnoIdToDelete.value !== null) {
+        await eliminarAlumnoHandler(alumnoIdToDelete.value);
+        alumnoIdToDelete.value = null;
+    }
 };
 
 onMounted(fetchAlumnos);
@@ -42,10 +59,19 @@ onMounted(fetchAlumnos);
                     Editar
                 </button>
 
-                <button @click="eliminarAlumnoHandler(alumno.id)">
+                <button @click="confirmDelete(alumno.id)">
                     Eliminar
                 </button>
             </li>
         </ul>
+
+        <Modal :visible="showModal" @update:visible="val => showModal = val" @confirm="handleConfirmDelete">
+            <template #header>
+                Confirmar eliminación
+            </template>
+            <template #body>
+                ¿Estás seguro de que deseas eliminar este alumno?
+            </template>
+        </Modal>
     </div>
 </template>
