@@ -26,6 +26,14 @@ const router = createRouter({
       component: () => import('../views/Alumno/Index.vue')
     },
     {
+      path: '/crear-alumno',
+      name: 'crear-alumno',
+      // route level code-splitting
+      // this generates a separate chunk (About.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import('../views/Alumno/AlumnoForm.vue')
+    },
+    {
       path: '/editar-alumno/:id',
       name: 'editar-alumno',
       // route level code-splitting
