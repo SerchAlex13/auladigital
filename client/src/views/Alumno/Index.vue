@@ -1,26 +1,27 @@
-<script>
-    import { eliminarAlumno, obtenerAlumnos } from '@/services/api';
+<script setup>
+import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+import { eliminarAlumno, obtenerAlumnos } from '@/services/api';
 
-    export default {
-        data() {
-            return {
-                alumnos: []
-            };
-        },
-        async created() {
-            const response = await obtenerAlumnos();
-            this.alumnos = response.data;
-        },
-        methods: {
-            async eliminarAlumno(id) {
-                await eliminarAlumno(id);
-                this.alumnos = this.alumnos.filter(alumno => alumno.id !== id);
-            },
-            editarAlumno(id) {
-                this.$router.push(`/editar-alumno/${id}`);
-            }
-        }
-    };
+const alumnos = ref([]);
+
+const router = useRouter();
+
+const fetchAlumnos = async () => {
+    const response = await obtenerAlumnos();
+    alumnos.value = response.data;
+};
+
+const editarAlumnoHandler = (id) => {
+    router.push(`/editar-alumno/${id}`);
+};
+
+const eliminarAlumnoHandler = async (id) => {
+    await eliminarAlumno(id);
+    alumnos.value = alumnos.value.filter(alumno => alumno.id !== id);
+};
+
+onMounted(fetchAlumnos);
 </script>
 
 <template>
@@ -37,11 +38,11 @@
             <li v-for="alumno in alumnos" :key="alumno.id">
                 {{ alumno.nombre }} {{ alumno.apellido_paterno }} {{ alumno.apellido_materno }}, {{ alumno.estatus }}
 
-                <button @click="editarAlumno(alumno.id)">
+                <button @click="editarAlumnoHandler(alumno.id)">
                     Editar
                 </button>
 
-                <button @click="eliminarAlumno(alumno.id)">
+                <button @click="eliminarAlumnoHandler(alumno.id)">
                     Eliminar
                 </button>
             </li>

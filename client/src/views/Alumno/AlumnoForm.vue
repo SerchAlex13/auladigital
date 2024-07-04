@@ -1,45 +1,57 @@
-<script>
-    import { actualizarAlumno, crearAlumno, obtenerAlumno } from '@/services/api';
-    
-    export default {
-        data() {
-            return {
-                alumno: {
-                    nombre: '',
-                    apellido_paterno: '',
-                    apellido_materno: '',
-                },
-                isEdit: false
-            };
-        },
-        async created() {
-            if (this.$route.params.id) {
-                this.isEdit = true;
-                const response = await obtenerAlumno(this.$route.params.id);
-                this.alumno = response.data;
-            }
-        },
-        methods: {
-            async saveStudent() {
-                if (this.isEdit) {
-                    await actualizarAlumno(this.$route.params.id, this.alumno);
-                } else {
-                    await crearAlumno(this.alumno);
-                }
-                this.$router.push('/alumnos');
-            }
-        }
-    };
+<script setup>
+import { ref, onMounted } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
+import { actualizarAlumno, crearAlumno, obtenerAlumno } from '@/services/api';
+
+const alumno = ref({
+    nombre: '',
+    apellido_paterno: '',
+    apellido_materno: '',
+});
+
+const isEdit = ref(false);
+
+const router = useRouter();
+const route = useRoute();
+
+const fetchAlumno = async (id) => {
+    const response = await obtenerAlumno(id);
+    alumno.value = response.data;
+};
+
+onMounted(() => {
+    if (route.params.id) {
+        isEdit.value = true;
+        fetchAlumno(route.params.id);
+    }
+});
+
+const guardarAlumno = async () => {
+    if (isEdit.value) {
+        await actualizarAlumno(route.params.id, alumno.value);
+    } else {
+        await crearAlumno(alumno.value);
+    }
+    router.push('/alumnos');
+};
 </script>
 
 <template>
     <div>
-        <h1>{{ isEdit ? 'Editar Alumno' : 'Crear Alumno' }}</h1>
-        <form @submit.prevent="saveStudent">
+        <h1>
+            {{ isEdit ? 'Editar Alumno' : 'Crear Alumno' }}
+        </h1>
+
+        <form @submit.prevent="guardarAlumno">
             <input v-model="alumno.nombre" placeholder="Nombre" required />
+
             <input v-model="alumno.apellido_paterno" placeholder="Apellido paterno" required />
+
             <input v-model="alumno.apellido_materno" placeholder="Apellido materno" required />
-            <button type="submit">{{ isEdit ? 'Actualizar' : 'Crear' }}</button>
+
+            <button type="submit">
+                {{ isEdit ? 'Actualizar' : 'Crear' }}
+            </button>
         </form>
     </div>
 </template>
