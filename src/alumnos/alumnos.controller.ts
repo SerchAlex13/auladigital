@@ -16,6 +16,11 @@ export class AlumnosController {
         return this.alumnosService.obtenerAlumnos();
     }
 
+    @Get('/:id')
+    obtenerAlumno(@Param('id') id: string) {
+        return this.alumnosService.obtenerAlumno(id);
+    }
+
     @Post()
     crearAlumno(@Body() nuevoAlumno: CrearAlumnoDTO) {
         return this.alumnosService.crearAlumno(

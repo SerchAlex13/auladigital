@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Alumno, EstatusAlumno } from './alumno.entity';
 import { v4 } from 'uuid';
 import { ActualizarAlumnoDTO } from './dto/alumno.dto';
@@ -17,6 +17,16 @@ export class AlumnosService {
     
     obtenerAlumnos() {
         return this.alumnos;
+    }
+
+    obtenerAlumno(id: string) {
+        const alumno = this.alumnos.find(alumno => alumno.id === id);
+
+        if (!alumno) {
+            return new NotFoundException(`No se encontró el alumno con el id ${id}`);
+        }
+
+        return alumno;
     }
 
     crearAlumno(nombre: string, apellido_paterno: string, apellido_materno: string) {
