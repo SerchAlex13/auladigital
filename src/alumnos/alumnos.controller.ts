@@ -11,32 +11,37 @@ export class AlumnosController {
     @Get()
     @ApiOperation({summary: 'Lista a todos los alumnos'})
     @ApiResponse({status: 200, description: 'Retorna a todos los alumnos.'})
-    @ApiResponse({status: 403, description: 'Forbidden.'})
-    obtenerAlumnos() {
-        return this.alumnosService.obtenerAlumnos();
+    async obtenerAlumnos() {
+        const alumnos = await this.alumnosService.obtenerAlumnos();
+
+        return alumnos;
     }
 
     @Get('/:id')
-    obtenerAlumno(@Param('id') id: string) {
-        return this.alumnosService.obtenerAlumno(id);
+    async obtenerAlumno(@Param('id') id: string) {
+        const alumno = await this.alumnosService.obtenerAlumno(id);
+
+        return alumno;
     }
 
     @Post()
-    crearAlumno(@Body() nuevoAlumno: CrearAlumnoDTO) {
-        return this.alumnosService.crearAlumno(
-            nuevoAlumno.nombre,
-            nuevoAlumno.apellido_paterno,
-            nuevoAlumno.apellido_materno
-        );
+    async crearAlumno(@Body() nuevoAlumno: CrearAlumnoDTO) {
+        const alumno = await this.alumnosService.crearAlumno(nuevoAlumno)
+
+        return alumno;
     }
 
     @Patch(':id')
-    actualizarAlumnos(@Param('id') id: string, @Body() camposActualizados: ActualizarAlumnoDTO) {
-        return this.alumnosService.actualizarAlumno(id, camposActualizados);
+    async actualizarAlumnos(@Param('id') id: string, @Body() camposActualizados: ActualizarAlumnoDTO) {
+        const alumno = await this.alumnosService.actualizarAlumno(id, camposActualizados);
+
+        return alumno;
     }
 
     @Delete(':id')
-    eliminarAlumno(@Param('id') id: string) {
-        this.alumnosService.eliminarAlumno(id);
+    async eliminarAlumno(@Param('id') id: string) {
+        const alumno = await this.alumnosService.eliminarAlumno(id);
+
+        return alumno;
     }
 }

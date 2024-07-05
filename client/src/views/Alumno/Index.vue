@@ -23,7 +23,7 @@ const editarAlumnoHandler = (id) => {
 
 const eliminarAlumnoHandler = async (id) => {
     await eliminarAlumno(id);
-    alumnos.value = alumnos.value.filter(alumno => alumno.id !== id);
+    alumnos.value = alumnos.value.filter(alumno => alumno._id !== id);
 };
 
 const confirmDelete = (id) => {
@@ -52,14 +52,14 @@ onMounted(fetchAlumnos);
         </RouterLink>
 
         <ul>
-            <li v-for="alumno in alumnos" :key="alumno.id">
-                {{ alumno.nombre }} {{ alumno.apellido_paterno }} {{ alumno.apellido_materno }}, {{ alumno.estatus }}
+            <li v-for="alumno in alumnos" :key="alumno._id">
+               {{ alumno.nombre }} {{ alumno.apellido_paterno }} {{ alumno.apellido_materno }}
 
-                <button @click="editarAlumnoHandler(alumno.id)">
+                <button @click="editarAlumnoHandler(alumno._id)">
                     Editar
                 </button>
 
-                <button @click="confirmDelete(alumno.id)">
+                <button @click="confirmDelete(alumno._id)">
                     Eliminar
                 </button>
             </li>

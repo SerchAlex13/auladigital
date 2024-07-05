@@ -1,62 +1,42 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Alumno, EstatusAlumno } from './alumno.entity';
+import { Alumno } from './alumno.entity';
 import { v4 } from 'uuid';
-import { ActualizarAlumnoDTO } from './dto/alumno.dto';
+import { ActualizarAlumnoDTO, CrearAlumnoDTO } from './dto/alumno.dto';
+import { Model } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
+import { AlumnoInterface } from './interfaces/alumno.interface';
 
 @Injectable()
 export class AlumnosService {
-    private alumnos: Alumno[] = [
-        {
-            id: '1',
-            nombre: 'Sergio Alejandro',
-            apellido_paterno: 'Rosales',
-            apellido_materno: 'Mejía',
-            estatus: EstatusAlumno.ACTIVO,
-        },
-    ]
-    
-    obtenerAlumnos() {
-        return this.alumnos;
+    constructor(@InjectModel('Alumno') private readonly alumnoModel: Model<AlumnoInterface>) {}
+
+    async obtenerAlumnos(): Promise<AlumnoInterface[]> {
+        const alumnos = await this.alumnoModel.find();
+
+        return alumnos;
     }
 
-    obtenerAlumno(id: string) {
-        const alumno = this.alumnos.find(alumno => alumno.id === id);
-
-        if (!alumno) {
-            return new NotFoundException(`No se encontró el alumno con el id ${id}`);
-        }
+    async obtenerAlumno(id: string): Promise<AlumnoInterface> {
+        const alumno = await this.alumnoModel.findById(id);
 
         return alumno;
     }
 
-    crearAlumno(nombre: string, apellido_paterno: string, apellido_materno: string) {
-        const alumno: Alumno = {
-            id: v4(),
-            nombre: nombre,
-            apellido_paterno: apellido_paterno,
-            apellido_materno: apellido_materno,
-            estatus: EstatusAlumno.ACTIVO,
-        }
+    async crearAlumno(nuevoAlumno: CrearAlumnoDTO): Promise<AlumnoInterface> {
+        const alumno = new this.alumnoModel(nuevoAlumno);
 
-        this.alumnos.push(alumno);
-
-        return alumno;
+        return await alumno.save();
     }
 
-    actualizarAlumno(id: string, camposActualizados: ActualizarAlumnoDTO): Alumno {
-        const alumno = this.buscarAlumnoPorId(id);
-        const alumnoActualizado = Object.assign(alumno, camposActualizados);
-
-        this.alumnos = this.alumnos.map(alumno => alumno.id === id ? alumnoActualizado : alumno);
+    async actualizarAlumno(id: string, camposActualizados: ActualizarAlumnoDTO): Promise<AlumnoInterface> {
+        const alumnoActualizado = await this.alumnoModel.findByIdAndUpdate(id, camposActualizados, { new: true });
 
         return alumnoActualizado;
     }
 
-    buscarAlumnoPorId(id: string): Alumno {
-        return this.alumnos.find(alumno => alumno.id === id);
-    }
+    async eliminarAlumno(id: string): Promise<AlumnoInterface> {
+        const alumnoEliminado = await this.alumnoModel.findByIdAndDelete(id);
 
-    eliminarAlumno(id: string) {
-        this.alumnos = this.alumnos.filter(alumno => alumno.id !== id);
+        return alumnoEliminado;
     }
 }
