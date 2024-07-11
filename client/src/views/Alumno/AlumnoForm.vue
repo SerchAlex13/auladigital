@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import { actualizarAlumno, crearAlumno, obtenerAlumno } from '@/services/api';
+import { actualizarAlumno, crearAlumno, obtenerAlumno } from '@/services/alumnos-api';
 
 const alumno = ref({
     nombre: '',

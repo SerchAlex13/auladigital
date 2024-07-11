@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { eliminarAlumno, obtenerAlumnos } from '@/services/api';
+import { eliminarAlumno, obtenerAlumnos } from '@/services/alumnos-api';
 import Modal from '@/components/Modal.vue';
 
 const alumnos = ref([]);
