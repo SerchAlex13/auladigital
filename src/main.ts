@@ -24,7 +24,7 @@ async function bootstrap() {
   // Para que otros sitios puedan consultar la API y no dé error de CORS
   app.enableCors({
     // Para especificar dominios que sí pueden acceder
-    origin: 'https://faztweb.com'
+    // origin: 'https://faztweb.com'
   });
 
   await app.listen(3000);
